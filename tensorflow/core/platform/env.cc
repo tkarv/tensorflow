@@ -548,6 +548,15 @@ Status ReadBinaryProto(Env* env, const string& fname,
   return Status::OK();
 }
 
+Status ReadBinaryProtoWithPBString(Env* env, const string& string,
+                                   ::tensorflow::protobuf::MessageLite* proto) {
+    (void)*env;
+    if(!proto->ParseFromString(string)) {
+        return tensorflow::errors::DataLoss("Can't parse memory location as binary proto");
+    }
+    return tensorflow::Status::OK();
+}
+
 Status WriteTextProto(Env* env, const string& fname,
                       const ::tensorflow::protobuf::Message& proto) {
 #if !defined(TENSORFLOW_LITE_PROTOS)
