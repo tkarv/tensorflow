@@ -51,7 +51,7 @@ Status ReadSavedModel(const string& export_dir, SavedModel* saved_model_proto) {
 Status ReadSavedModelWithPBString(const string& export_dir, const string& pbmodel, SavedModel* saved_model_proto) {
   LOG(INFO) << "Reading SavedModel from: " << export_dir;
 
-  return ReadBinaryProtoWithPBString(Env::Default(), saved_model_pb_path,
+  return ReadBinaryProtoWithPBString(Env::Default(), pbmodel,
                                      saved_model_proto);
   return Status(error::Code::NOT_FOUND,
                 "Could not find SavedModel .pb or .pbtxt at supplied export "

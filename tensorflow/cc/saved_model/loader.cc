@@ -321,11 +321,11 @@ Status LoadSavedModelInternalWithPBString(const SessionOptions& session_options,
                               const RunOptions& run_options,
                               const string& export_dir,
                               const std::unordered_set<string>& tags,
-                              SavedModelBundle* const bundle
+                              SavedModelBundle* const bundle,
                               const string& pbmodel) {
   const uint64 read_start_microseconds = Env::Default()->NowMicros();
   TF_RETURN_IF_ERROR(ReadMetaGraphDefFromSavedModelWithPBString(export_dir, tags,
-                                                    &bundle->meta_graph_def, pbstring));
+                                                    &bundle->meta_graph_def, pbmodel));
   TF_RETURN_IF_ERROR(
       ReadSavedModelDebugInfoIfPresent(export_dir, &bundle->debug_info));
   TF_RETURN_IF_ERROR(LoadMetaGraphIntoSession(
@@ -389,7 +389,7 @@ Status LoadSavedModel(const SessionOptions& session_options,
 
 Status LoadSavedModelWithStringPB(const SessionOptions& session_options,
                       const RunOptions& run_options, const string& export_dir,
-                      const std::unordered_set<string>* tags,
+                      const std::unordered_set<string>& tags,
                       SavedModelBundle* const bundle, const std::string& pbmodel) {
   // TODO(robson): Add tests for the counters.
   const uint64 start_microseconds = Env::Default()->NowMicros();
