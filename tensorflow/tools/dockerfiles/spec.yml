@@ -77,17 +77,6 @@ releases:
 
 slice_sets:
 
-<<<<<<< HEAD
-=======
-    py:
-        - add_to_name: ""
-          args:
-              - USE_PYTHON_3_NOT_2=1
-        - add_to_name: "-py3"
-          args:
-              - USE_PYTHON_3_NOT_2=1
-
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     jupyter:
         - add_to_name: ""
         - add_to_name: "-jupyter"

@@ -34,16 +34,6 @@ namespace tridiagonal {
 
 namespace {
 
-<<<<<<< HEAD
-=======
-struct TridiagonalSystemShape {
-  const int64 rank;
-  const int64 num_equations;
-  TridiagonalSystemShape(int64 rk, int64 num_eqs)
-      : rank(rk), num_equations(num_eqs) {}
-};
-
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 Status CheckSecondToLastDimension(const Shape& op_shape, int64 rank,
                                   int64 expected, const std::string& op_name) {
   const auto actual_num_dims = ShapeUtil::GetDimension(op_shape, rank - 2);
@@ -115,7 +105,6 @@ StatusOr<int64> CheckSystemAndReturnNumEquations(XlaOp lower_diagonal,
   TF_RETURN_IF_ERROR(CheckSecondToLastDimension(upper_diagonal_shape, rank, 1,
                                                 "upper diagonal"));
 
-<<<<<<< HEAD
   return num_equations;
 }
 
@@ -133,9 +122,6 @@ XlaOp Coefficient(XlaOp operand, XlaOp i) {
 XlaOp UpdateEq(XlaOp updated, int32 i, XlaOp update) {
   return DynamicUpdateSliceInMinorDims(
       updated, update, /*starts=*/{ConstantR0(updated.builder(), i)});
-=======
-  return TridiagonalSystemShape(rank, num_equations);
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 }
 
 XlaOp UpdateEq(XlaOp updated, XlaOp i, XlaOp update) {

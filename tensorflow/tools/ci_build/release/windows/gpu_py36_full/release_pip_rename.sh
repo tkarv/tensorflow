@@ -20,9 +20,5 @@ source tensorflow/tools/ci_build/release/common.sh
 
 # Copy and rename to tensorflow
 for f in $(ls py_test_dir/tensorflow-*cp3*-cp3*m-win_amd64.whl); do
-<<<<<<< HEAD
   copy_to_new_project_name "${f}" tensorflow_gpu /c/Python36/python
-=======
-  copy_to_new_project_name "${f}" tensorflow_gpu
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 done

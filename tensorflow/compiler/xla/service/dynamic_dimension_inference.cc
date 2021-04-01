@@ -575,12 +575,7 @@ Status DynamicDimensionInferenceVisitor::HandleSetDimensionSize(
   if (!dimension_is_static) {
     // Propagate dynamic dimension indicated by this set dimension size
     // instruction.
-<<<<<<< HEAD
     parent_->SetDynamicSize(hlo, {}, hlo->dimension(), hlo->mutable_operand(1));
-=======
-    parent_->SetDynamicSize(hlo, {}, hlo->dimension(), hlo->mutable_operand(1),
-                            DimensionConstraint(1, 1));
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   }
 
   // Also Propagate dynamic dimension already set by operands.
@@ -836,14 +831,8 @@ Status DynamicDimensionInferenceVisitor::HandleReshape(HloInstruction* hlo) {
                   operand_dynamic_size->shape(), HloOpcode::kDivide,
                   operand_dynamic_size, divisor_hlo));
 
-<<<<<<< HEAD
           parent_->SetDynamicSize(reshape, {}, output_dynamic_dimension,
                                   new_dynamic_size);
-=======
-          parent_->SetDynamicSize(
-              reshape, {}, output_dynamic_dimension, new_dynamic_size,
-              DimensionConstraint(1, constraint.multiple_of / divisor));
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
         }
 
         if (input_dim_size < output_dim_size) {
@@ -880,17 +869,8 @@ Status DynamicDimensionInferenceVisitor::HandleReshape(HloInstruction* hlo) {
               hlo->parent()->AddInstruction(HloInstruction::CreateBinary(
                   output_dynamic_size->shape(), HloOpcode::kMultiply,
                   new_dynamic_size, operand_dynamic_size));
-<<<<<<< HEAD
           parent_->SetDynamicSize(reshape, {}, output_dynamic_dimension,
                                   new_dynamic_size);
-=======
-          int64 new_multiple_of_constraint =
-              constraint.multiple_of * output_dim_size /
-              operand->shape().dimensions(input_dynamic_dimension);
-          parent_->SetDynamicSize(
-              reshape, {}, output_dynamic_dimension, new_dynamic_size,
-              DimensionConstraint(1, new_multiple_of_constraint));
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
         }
 
         return Status::OK();
@@ -1390,12 +1370,7 @@ Status DynamicDimensionInferenceVisitor::HandleParameter(HloInstruction* hlo) {
 
         parent_->SetDynamicSize(target_parameter,
                                 dynamic_dimension.parameter_index,
-<<<<<<< HEAD
                                 dynamic_dimension.dimension, dynamic_size);
-=======
-                                dynamic_dimension.dimension, dynamic_size,
-                                DimensionConstraint(1, 1));
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
         return Status::OK();
       });
 }

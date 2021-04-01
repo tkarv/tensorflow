@@ -69,12 +69,6 @@ DEVICE_PLACEMENT_SILENT_FOR_INT32 = (
 SYNC = 0
 ASYNC = 1
 
-<<<<<<< HEAD
-=======
-MIRRORING_NONE = pywrap_tensorflow.TFE_MIRRORING_NONE
-MIRRORING_ALL = pywrap_tensorflow.TFE_MIRRORING_ALL
-
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 _KEEP_ALIVE_SECS = 600
 
 _python_eager_context_create_counter = monitoring.Counter(
@@ -493,15 +487,9 @@ class Context(object):
         # configured and thus clear the job, replica & task.
         if spec.job == "localhost":
           spec = spec.replace(job=None, replica=None, task=None)
-<<<<<<< HEAD
         logical_devices.append(
             LogicalDevice(name=spec.to_string(), device_type=spec.device_type))
         dev_type = pywrap_tfe.TF_DeviceListType(device_list, i)
-=======
-        self._logical_devices.append(
-            LogicalDevice(name=spec.to_string(), device_type=spec.device_type))
-        dev_type = pywrap_tensorflow.TF_DeviceListType(device_list, i)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
         if dev_type == "GPU":
           self._num_gpus += 1
 

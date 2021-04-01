@@ -27,12 +27,9 @@ from tensorflow.python.eager import context
 from tensorflow.python.eager import def_function
 from tensorflow.python.framework import constant_op
 from tensorflow.python.framework import test_combinations
-<<<<<<< HEAD
 from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import math_ops
 from tensorflow.python.ops import variables
-=======
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 from tensorflow.python.platform import test
 from tensorflow.python.training.experimental import loss_scale as loss_scale_module
 from tensorflow.python.training.experimental import loss_scaling_gradient_tape as lsgt
@@ -56,7 +53,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
   def _run_with_strategy(self, run_fn, strategy, use_tf_function=False):
     """Runs `run_fn` under the DistributionStrategy `strategy`.
 
-<<<<<<< HEAD
     Runs `run_fn` with `strategy.run`. Returns a list of the
     return values of `run_fn`, one per replica.
 
@@ -79,30 +75,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
     def convert_tensor_to_list(tensor):
       if isinstance(tensor, values.DistributedValues):
         return strategy.experimental_local_results(tensor)
-=======
-    Runs `run_fn` with `strategy.experimental_run_v2`. Returns a list of the
-    return values of `run_fn`, one per replica.
-
-    Args:
-      run_fn: The function to run.
-      strategy: The DistributionStrategy to run `run_fn` with.
-      use_tf_function: If True, call `run_fn` under a tf.function.
-
-    Returns:
-      A list of tensors, each being the return value of `run_fn` from one
-      replica. If a nested structure is returned from `run_fn`, returns a
-      nested structure, where each element is a list of tensors.
-    """
-    strategy_fn = lambda: strategy.experimental_run_v2(run_fn)
-    if use_tf_function:
-      strategy_fn = def_function.function(strategy_fn)
-
-    results = strategy_fn()
-
-    def convert_tensor_to_list(tensor):
-      if isinstance(tensor, values.DistributedValues):
-        return tensor.values
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       else:
         return [tensor]
     return nest.map_structure(convert_tensor_to_list, results)
@@ -115,23 +87,14 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
   ))
   def test_basic_tapes(self, loss_scale, strategy_fn, use_tf_function):
     loss_scale = loss_scale(32)
-<<<<<<< HEAD
     strategy = strategy_fn()
     with strategy.scope():
       x = variables.Variable(3.0)
     def run_fn():
-=======
-    def run_fn():
-      x = constant_op.constant(3.0)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       with lsgt.LossScaleGradientTape(loss_scale) as g:
         y = x * x
       return g.gradient(y, x)
-<<<<<<< HEAD
     dy_dx_list = self._run_with_strategy(run_fn, strategy, use_tf_function)
-=======
-    dy_dx_list = self._run_with_strategy(run_fn, strategy_fn(), use_tf_function)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     self.assertEqual(loss_scale(), 32)
     for dy_dx in dy_dx_list:
       self.assertEqual(dy_dx, 6.0)
@@ -144,7 +107,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
   ))
   def test_output_gradients(self, loss_scale, strategy_fn, use_tf_function):
     loss_scale = loss_scale(32)
-<<<<<<< HEAD
     strategy = strategy_fn()
     with strategy.scope():
       x = variables.Variable(3.0)
@@ -209,40 +171,21 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
     self.assertEqual(loss_scale(), 1)
     for dy_dx in dy_dx_list:
       self.assertEqual(dy_dx, 6.0)
-=======
-    def run_fn():
-      x = constant_op.constant(3.0)
-      with lsgt.LossScaleGradientTape(loss_scale) as g:
-        g.watch(x)
-        y = x * x
-      return g.gradient(y, x, output_gradients=constant_op.constant(2.0))
-    dy_dx_list = self._run_with_strategy(run_fn, strategy_fn(), use_tf_function)
-    self.assertEqual(loss_scale(), 32)
-    for dy_dx in dy_dx_list:
-      self.assertEqual(dy_dx, 12.0)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
   @test_combinations.generate(test_combinations.combine(
       loss_scale=[loss_scale_module.FixedLossScale,
                   loss_scale_module.DynamicLossScale],
       strategy_fn=[default_strategy_fn],
-<<<<<<< HEAD
       use_tf_function=[True, False],
       share_loss_scale=[True, False]
   ))
   def test_nested_tapes(self, loss_scale, strategy_fn, use_tf_function,
                         share_loss_scale):
-=======
-      use_tf_function=[True, False]
-  ))
-  def test_nested_tapes(self, loss_scale, strategy_fn, use_tf_function):
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     # TODO(reedwm): Support nested tapes with mirrored strategy. Currently this
     # does not work, as the set of active gradient tapes is a thread-local
     # variable. Mirrored strategy spawns new threads, making the outer gradient
     # tape non-active when using the inner gradient tape.
     outer_loss_scale = loss_scale(32)
-<<<<<<< HEAD
     inner_loss_scale = outer_loss_scale if share_loss_scale else loss_scale(32)
     strategy = strategy_fn()
     with strategy.scope():
@@ -250,15 +193,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
     def run_fn():
       with lsgt.LossScaleGradientTape(outer_loss_scale) as g:
         with lsgt.LossScaleGradientTape(inner_loss_scale) as gg:
-=======
-    inner_loss_scale = loss_scale(32)
-    def run_fn():
-      x = constant_op.constant(3.0)
-      with lsgt.LossScaleGradientTape(outer_loss_scale) as g:
-        g.watch(x)
-        with lsgt.LossScaleGradientTape(inner_loss_scale) as gg:
-          gg.watch(x)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
           y = x * x
         dy_dx = gg.gradient(y, x)
       d2y_dx2 = g.gradient(dy_dx, x)
@@ -274,16 +208,9 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
       self.assertEqual(d2y_dx2, 2.0)
 
   def test_non_persistent_tapes_error(self):
-<<<<<<< HEAD
     x = variables.Variable(3.0)
     with lsgt.LossScaleGradientTape(loss_scale_module.FixedLossScale(32),
                                     persistent=False) as g:
-=======
-    x = constant_op.constant(3.0)
-    with lsgt.LossScaleGradientTape(loss_scale_module.FixedLossScale(32),
-                                    persistent=False) as g:
-      g.watch(x)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       y = x * x
       z = y * y
     g.gradient(z, x)
@@ -297,7 +224,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
       use_tf_function=[True, False]
   ))
   def test_persistent_tapes(self, loss_scale, strategy_fn, use_tf_function):
-<<<<<<< HEAD
     ls = loss_scale(32)
     strategy = strategy_fn()
     with strategy.scope():
@@ -317,27 +243,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
     for dy_dx in dy_dx_list:
       self.assertEqual(dy_dx, 6.0)
 
-=======
-
-    ls = loss_scale(32)
-    def run_fn():
-      x = constant_op.constant(3.0)
-      with lsgt.LossScaleGradientTape(ls, persistent=True) as g:
-        g.watch(x)
-        y = x * x
-        z = y * y
-      dz_dx = g.gradient(z, x)
-      dy_dx = g.gradient(y, x)
-      return dz_dx, dy_dx
-
-    dz_dx_list, dy_dx_list = self._run_with_strategy(run_fn, strategy_fn(),
-                                                     use_tf_function)
-    for dz_dx in dz_dx_list:
-      self.assertEqual(dz_dx, 108.0)
-    for dy_dx in dy_dx_list:
-      self.assertEqual(dy_dx, 6.0)
-
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   @test_combinations.generate(test_combinations.combine(
       loss_scale=[loss_scale_module.FixedLossScale,
                   loss_scale_module.DynamicLossScale],
@@ -366,7 +271,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
   @test_combinations.generate(test_combinations.combine(
       loss_scale=[loss_scale_module.FixedLossScale,
                   loss_scale_module.DynamicLossScale],
-<<<<<<< HEAD
       strategy_fn=[default_strategy_fn, create_mirrored_strategy]
   ))
   def test_different_dtypes(self, loss_scale, strategy_fn):
@@ -472,27 +376,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
       self.assertTrue(check_fn(dy_dx))
 
   @test_combinations.generate(test_combinations.combine(
-=======
-      strategy_fn=[default_strategy_fn, create_mirrored_strategy],
-      non_finite_term=[np.inf, np.nan],
-  ))
-  def test_scaling_non_finite_gradient(self, loss_scale, strategy_fn,
-                                       non_finite_term):
-    loss_scale = loss_scale(32)
-    def run_fn():
-      x = constant_op.constant(1.0)
-      with lsgt.LossScaleGradientTape(loss_scale) as g:
-        g.watch(x)
-        y = x * non_finite_term
-      return g.gradient(y, x)
-
-    dy_dx_list = self._run_with_strategy(run_fn, strategy_fn())
-    check_fn = np.isposinf if non_finite_term == np.inf else np.isnan
-    for dy_dx in dy_dx_list:
-      self.assertTrue(check_fn(dy_dx))
-
-  @test_combinations.generate(test_combinations.combine(
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       strategy_fn=[default_strategy_fn, create_mirrored_strategy],
       non_finite_term=[np.inf, np.nan],
       use_tf_function=[True, False],
@@ -500,7 +383,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
   def test_dynamic_scale_to_one_on_non_finite_gradient(
       self, strategy_fn, non_finite_term, use_tf_function):
     loss_scale = loss_scale_module.DynamicLossScale(initial_loss_scale=32)
-<<<<<<< HEAD
     strategy = strategy_fn()
     with strategy.scope():
       x = variables.Variable(3.0)
@@ -510,49 +392,9 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
       g.gradient(y, x)
 
     self._run_with_strategy(run_fn, strategy, use_tf_function)
-=======
-    def run_fn():
-      x = constant_op.constant(1.0)
-      with lsgt.LossScaleGradientTape(loss_scale) as g:
-        g.watch(x)
-        y = x * non_finite_term
-      g.gradient(y, x)
-
-    self._run_with_strategy(run_fn, strategy_fn(), use_tf_function)
     self.assertEqual(self.evaluate(loss_scale()), 1.0)
 
   @test_combinations.generate(test_combinations.combine(
-      use_tf_function=[True, False],
-  ))
-  def test_dynamic_scale_to_one_on_non_finite_gradient_on_last_replica(
-      self, use_tf_function):
-    if context.num_gpus() < 1:
-      # Requires the mirrored strategy to have two replicas: one on the CPU and
-      # one on the GPU
-      self.skipTest('Test requires at least 1 GPU')
-    loss_scale = loss_scale_module.DynamicLossScale(initial_loss_scale=32)
-    def run_fn():
-      x = constant_op.constant(1.0)
-      with lsgt.LossScaleGradientTape(loss_scale) as g:
-        g.watch(x)
-        # The gradient will be finite on the first replica, and infinite on the
-        # second
-        rep_ctx = distribution_strategy_context.get_replica_context()
-        if rep_ctx.replica_id_in_sync_group == rep_ctx.num_replicas_in_sync - 1:
-          y = x * np.inf
-        else:
-          y = x * 2
-      return g.gradient(y, x)
-
-    replica0_grad, replica1_grad = self._run_with_strategy(
-        run_fn, create_mirrored_strategy(), use_tf_function)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
-    self.assertEqual(self.evaluate(loss_scale()), 1.0)
-    self.assertEqual(replica0_grad, 2.0)
-    self.assertEqual(replica1_grad, np.inf)
-
-  @test_combinations.generate(test_combinations.combine(
-<<<<<<< HEAD
       use_tf_function=[True, False],
   ))
   def test_dynamic_scale_to_one_on_non_finite_gradient_on_last_replica(
@@ -583,15 +425,12 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
     self.assertEqual(replica1_grad, np.inf)
 
   @test_combinations.generate(test_combinations.combine(
-=======
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       strategy_fn=[default_strategy_fn, create_mirrored_strategy],
       non_finite_term=[np.inf, np.nan],
   ))
   def test_fixed_scaling_no_change_non_finite_gradient(self, strategy_fn,
                                                        non_finite_term):
     loss_scale = loss_scale_module.FixedLossScale(32)
-<<<<<<< HEAD
     strategy = strategy_fn()
     with strategy.scope():
       x = variables.Variable(3.0)
@@ -601,16 +440,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
       return g.gradient(y, x)
 
     dy_dx_list = self._run_with_strategy(run_fn, strategy)
-=======
-    def run_fn():
-      x = constant_op.constant(1.0)
-      with lsgt.LossScaleGradientTape(loss_scale) as g:
-        g.watch(x)
-        y = x * non_finite_term
-      return g.gradient(y, x)
-
-    dy_dx_list = self._run_with_strategy(run_fn, strategy_fn())
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     check_fn = np.isposinf if non_finite_term == np.inf else np.isnan
     for dy_dx in dy_dx_list:
       self.assertTrue(check_fn(self.evaluate(dy_dx)))
@@ -622,7 +451,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
   ))
   def test_dynamic_loss_scaling_down_loop(self, strategy_fn, use_tf_function):
     loss_scale = loss_scale_module.DynamicLossScale(initial_loss_scale=32)
-<<<<<<< HEAD
     strategy = strategy_fn()
     with strategy.scope():
       x = variables.Variable(3.0)
@@ -632,16 +460,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
       return g.gradient(y, x)
 
     dy_dx_list = self._run_with_strategy(run_fn, strategy, use_tf_function)
-=======
-    def run_fn():
-      x = constant_op.constant(1.0)
-      with lsgt.LossScaleGradientTape(loss_scale) as g:
-        g.watch(x)
-        y = x * (3.0 * (10**37))  # grad will be inf after scaling
-      return g.gradient(y, x)
-
-    dy_dx_list = self._run_with_strategy(run_fn, strategy_fn(), use_tf_function)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     self.assertEqual(self.evaluate(loss_scale()), 8.0)
     for dy_dx in dy_dx_list:
       self.assertAllClose(self.evaluate(dy_dx), (3.0 * (10**37)), atol=1e-06)
@@ -653,7 +471,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
   def test_dynamic_loss_scaling_inf_target_post_scale(self, strategy_fn,
                                                       use_tf_function):
     loss_scale = loss_scale_module.DynamicLossScale(initial_loss_scale=32.0)
-<<<<<<< HEAD
     strategy = strategy_fn()
     with strategy.scope():
       x = variables.Variable(3.0 * (10**37))
@@ -717,19 +534,6 @@ class LossScaleGradientTapeTest(test.TestCase, parameterized.TestCase):
         NotImplementedError,
         'LossScaleGradientTape.batch_jacobian is not yet implemented'):
       g.batch_jacobian(y, x)
-=======
-    def run_fn():
-      x = constant_op.constant(3.0 * (10**37))
-      with lsgt.LossScaleGradientTape(loss_scale) as g:
-        g.watch(x)
-        y = x * 3.0  # target will be inf after scaling
-      return g.gradient(y, x)
-
-    dy_dx_list = self._run_with_strategy(run_fn, strategy_fn(), use_tf_function)
-    self.assertEqual(self.evaluate(loss_scale()), 32.0)
-    for dy_dx in dy_dx_list:
-      self.assertAllClose(self.evaluate(dy_dx), 3.0)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 
 if __name__ == '__main__':

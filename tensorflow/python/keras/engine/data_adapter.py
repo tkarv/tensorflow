@@ -19,12 +19,8 @@ from __future__ import division
 from __future__ import print_function
 
 import abc
-<<<<<<< HEAD
 import contextlib
 import functools
-=======
-import collections
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 import itertools
 import math
 import random
@@ -65,15 +61,6 @@ try:
   from scipy import sparse as scipy_sparse  # pylint: disable=g-import-not-at-top
 except ImportError:
   scipy_sparse = None
-<<<<<<< HEAD
-=======
-
-try:
-  import pandas as pd  # pylint: disable=g-import-not-at-top
-except ImportError:
-  pd = None
-
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 try:
   import pandas as pd  # pylint: disable=g-import-not-at-top
 except ImportError:
@@ -790,12 +777,8 @@ class GeneratorDataAdapter(DataAdapter):
     # Since we have to know the dtype of the python generator when we build the
     # dataset, we have to look at a batch to infer the structure.
     peek, x = self._peek_and_restore(x)
-<<<<<<< HEAD
     peek = self._standardize_batch(peek)
     peek = _process_tensorlike(peek)
-=======
-    assert_not_namedtuple(peek)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
     # Need to build the Model on concrete input shapes.
     if model is not None and not model.built:
@@ -1079,7 +1062,6 @@ def broadcast_sample_weight_modes(target_structure, sample_weight_modes):
   return sample_weight_modes
 
 
-<<<<<<< HEAD
 class DataHandler(object):
   """Handles iterating over epoch-level `tf.data.Iterator` objects."""
 
@@ -1564,18 +1546,3 @@ def _is_distributed_dataset(ds):
   return isinstance(
       ds,
       (input_lib.DistributedDataset, input_lib.DistributedDatasetsFromFunction))
-=======
-def assert_not_namedtuple(x):
-  if (isinstance(x, tuple) and
-      # TODO(b/144192902): Use a namedtuple checking utility.
-      hasattr(x, "_fields") and
-      isinstance(x._fields, collections.Sequence) and
-      all(isinstance(f, six.string_types) for f in x._fields)):
-    raise ValueError(
-        "Received namedtuple ({}) with fields `{}` as input. namedtuples "
-        "cannot, in general, be unambiguously resolved into `x`, `y`, "
-        "and `sample_weight`. For this reason Keras has elected not to "
-        "support them. If you would like the value to be unpacked, "
-        "please explicitly convert it to a tuple before passing it to "
-        "Keras.".format(x.__class__, x._fields))
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf

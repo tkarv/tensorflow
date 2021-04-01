@@ -1,7 +1,6 @@
 path: "tensorflow.keras.layers.experimental"
 tf_module {
   member {
-<<<<<<< HEAD
     name: "EinsumDense"
     mtype: "<type \'type\'>"
   }
@@ -10,8 +9,6 @@ tf_module {
     mtype: "<type \'type\'>"
   }
   member {
-=======
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     name: "preprocessing"
     mtype: "<type \'module\'>"
   }

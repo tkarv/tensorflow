@@ -27,13 +27,8 @@ export TF_NEED_GCP=1
 export TF_NEED_HDFS=1
 export TF_NEED_S3=1
 export TF_NEED_CUDA=1
-<<<<<<< HEAD
 export TF_CUDA_VERSION=11
 export TF_CUDNN_VERSION=8
-=======
-export TF_CUDA_VERSION=10.1
-export TF_CUDNN_VERSION=7
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 export TF_NEED_TENSORRT=1
 export TENSORRT_INSTALL_PATH=/usr/local/tensorrt
 export CC_OPT_FLAGS='-mavx'

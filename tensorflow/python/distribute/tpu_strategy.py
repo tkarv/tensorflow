@@ -76,26 +76,17 @@ def maybe_init_scope():
       yield
 
 
-<<<<<<< HEAD
 def validate_run_function(fn):
   """Validate the function passed into strategy.run."""
 
   # We allow three types of functions/objects passed into TPUStrategy
   # run in eager mode:
-=======
-def validate_experimental_run_function(fn):
-  """Validate the function passed into strategy.experimental_run_v2."""
-
-  # We allow three types of functions/objects passed into TPUStrategy
-  # experimental_run_v2 in eager mode:
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   #   1. a user annotated tf.function
   #   2. a ConcreteFunction, this is mostly what you get from loading a saved
   #      model.
   #   3. a callable object and the `__call__` method itself is a tf.function.
   #
   # Otherwise we return an error, because we don't support eagerly running
-<<<<<<< HEAD
   # run in TPUStrategy.
 
   if context.executing_eagerly() \
@@ -480,18 +471,6 @@ class TPUStrategyV2(distribute_lib.Strategy):
       Annotated tensor with identical value as `tensor`.
     """
     return xla_sharding.replicate(tensor, use_sharding_op=True)
-=======
-  # experimental_run_v2 in TPUStrategy.
-
-  if context.executing_eagerly() and not isinstance(
-      fn, def_function.Function) and not isinstance(
-          fn, function.ConcreteFunction) and not (callable(fn) and isinstance(
-              fn.__call__, def_function.Function)):
-    raise NotImplementedError(
-        "TPUStrategy.experimental_run_v2(fn, ...) does not support eager "
-        "execution. Either convert `fn` into a tf.function or consider "
-        "calling strategy.experimental_run_v2 inside a tf.function.")
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 
 @tf_export("distribute.experimental.TPUStrategy", v1=[])
@@ -524,42 +503,12 @@ class TPUStrategy(distribute_lib.Strategy):
                tpu_cluster_resolver=None,
                device_assignment=None):
     """Synchronous training in TPU donuts or Pods.
-<<<<<<< HEAD
-=======
-    
-    To construct a TPUStrategy object, you need to run the
-    initialization code as below:
-    
-    ```python
-    resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu=FLAGS.tpu)
-    tf.config.experimental_connect_to_cluster(resolver)
-    tf.tpu.experimental.initialize_tpu_system(resolver)
-    strategy = tf.distribute.experimental.TPUStrategy(resolver)
-    ```
-    
-    While using distribution strategies, the variables created within strategy's
-    scope will be replicated across all the replicas and can be kept in sync
-    using all-reduce algorithms.
-    
-    To run TF2 programs on TPUs, you can either use `.compile` and
-    `.fit` APIs in `tf.keras` with TPUStrategy, or write your own customized
-    training loop by calling `strategy.experimental_run_v2` directly. Note that
-    TPUStrategy doesn't support pure eager execution, so please make sure the
-    function passed into `strategy.experimental_run_v2` is a `tf.function` or
-    `strategy.experimental_run_v2` us called inside a `tf.function` if running
-    in eager mode.
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
     Args:
       tpu_cluster_resolver: A tf.distribute.cluster_resolver.TPUClusterResolver,
         which provides information about the TPU cluster.
       device_assignment: Optional `tf.tpu.experimental.DeviceAssignment` to
-<<<<<<< HEAD
         specify the placement of replicas on the TPU cluster.
-=======
-        specify the placement of replicas on the TPU cluster. Currently only
-        supports the usecase of using a single core within a TPU cluster.
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     """
     logging.warning(
         "`tf.distribute.experimental.TPUStrategy` is deprecated, please use "
@@ -582,11 +531,7 @@ class TPUStrategy(distribute_lib.Strategy):
   # This implementation runs a single step. It does not use infeed or outfeed.
   def run(self, fn, args=(), kwargs=None, options=None):
     """See base class."""
-<<<<<<< HEAD
     validate_run_function(fn)
-=======
-    validate_experimental_run_function(fn)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
     # Note: the target function is converted to graph even when in Eager mode,
     # so autograph is on by default here.
@@ -649,7 +594,6 @@ class TPUStrategyV1(distribute_lib.StrategyV1):
   # TODO(cjfj): Modify `_call_for_each_replica` in `TPUExtended` such that this
   # can use the default implementation.
   # This implementation runs a single step. It does not use infeed or outfeed.
-<<<<<<< HEAD
   def run(self, fn, args=(), kwargs=None, options=None):
     """Run `fn` on each replica, with the given arguments.
 
@@ -706,14 +650,6 @@ class TPUStrategyV1(distribute_lib.StrategyV1):
     fn = autograph.tf_convert(fn, autograph_ctx.control_status_ctx())
     options = options or distribute_lib.RunOptions()
     return self.extended.tpu_run(fn, args, kwargs, options)
-=======
-  def experimental_run_v2(self, fn, args=(), kwargs=None):
-    validate_experimental_run_function(fn)
-
-    """See base class."""
-    fn = autograph.tf_convert(fn, ag_ctx.control_status_ctx())
-    return self.extended.tpu_run(fn, args, kwargs)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 
 # TODO(josh11b): Switch to V2 when we no longer need to support tf.compat.v1.

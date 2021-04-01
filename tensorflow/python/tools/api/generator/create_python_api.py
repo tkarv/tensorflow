@@ -250,11 +250,7 @@ class _ModuleInitCodeBuilder(object):
       underscore_names_str = ', '.join(
           '\'%s\'' % name for name in self._underscore_names_in_root)
 
-<<<<<<< HEAD
       root_module_footer = """
-=======
-      root_module_footer = '''
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 _names_with_underscore = [%s]
 __all__ = [_s for _s in dir() if not _s.startswith('_')]
 __all__.extend([_s for _s in _names_with_underscore])
@@ -637,14 +633,8 @@ def create_api_files(output_files,
       module_text_map,
       deprecation_footer_map,
       root_module_footer,
-<<<<<<< HEAD
   ) = get_api_init_text(packages, output_package, api_name, api_version,
                         compat_api_versions, lazy_loading, use_relative_imports)
-=======
-  ) = get_api_init_text(
-      packages, output_package, api_name,
-      api_version, compat_api_versions, lazy_loading, use_relative_imports)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
   # Add imports to output files.
   missing_output_files = []

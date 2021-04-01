@@ -54,15 +54,10 @@ from tensorflow.python.ops import gen_array_ops
 from tensorflow.python.ops import math_ops
 from tensorflow.python.ops import nn
 from tensorflow.python.ops import variable_scope
-<<<<<<< HEAD
 from tensorflow.python.ops.ragged import ragged_tensor
 from tensorflow.python.platform import tf_logging
 from tensorflow.python.training.tracking import base as trackable
 from tensorflow.python.util import dispatch
-=======
-from tensorflow.python.platform import tf_logging
-from tensorflow.python.training.tracking import base as trackable
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 from tensorflow.python.util import nest
 from tensorflow.python.util import tf_decorator
 from tensorflow.python.util.tf_export import get_canonical_name_for_symbol
@@ -765,7 +760,6 @@ class Lambda(Layer):
   The `Lambda` layer exists so that arbitrary TensorFlow functions
   can be used when constructing `Sequential` and Functional API
   models. `Lambda` layers are best suited for simple operations or
-<<<<<<< HEAD
   quick experimentation. For more advanced use cases, follow
   [this guide](https://www.tensorflow.org/guide/keras/custom_layers_and_models)
   for subclassing `tf.keras.layers.Layer`.
@@ -776,17 +770,6 @@ class Lambda(Layer):
   non-portable. They should only be loaded in the same environment where
   they were saved. Subclassed layers can be saved in a more portable way
   by overriding their `get_config` method. Models that rely on
-=======
-  quick experimentation. For more advanced usecases, follow 
-  [this guide](https://www.tensorflow.org/guide/keras/custom_layers_and_models)
-  for subclassing `tf.keras.layers.Layer`. 
-  
-  The main reason to subclass `tf.keras.layers.Layer` instead of using a 
-  `Lambda` layer is saving and inspecting a Model. `Lambda` layers 
-  are saved by serializing the Python bytecode, whereas subclassed 
-  Layers can be saved via overriding their `get_config` method. Overriding 
-  `get_config` improves the portability of Models. Models that rely on 
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   subclassed Layers are also often easier to visualize and reason about.
 
   Examples:
@@ -825,7 +808,6 @@ class Lambda(Layer):
     trained if `scale_layer` is used in a Model.
 
     A better pattern is to write a subclassed Layer:
-<<<<<<< HEAD
 
     ```python
       class ScaleLayer(tf.keras.layers.Layer):
@@ -837,19 +819,6 @@ class Lambda(Layer):
           return inputs * self.scale
     ```
 
-=======
-
-    ```python
-      class ScaleLayer(tf.keras.layers.Layer):
-        def __init__(self):
-          super(ScaleLayer, self).__init__()
-          self.scale = tf.Variable(1.)
-
-        def call(self, inputs):
-          return inputs * self.scale
-    ```
-
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     In general, Lambda layers can be convenient for simple stateless
     computation, but anything more complex should use a subclass Layer instead.
 
@@ -956,20 +925,12 @@ class Lambda(Layer):
       # checking only to immediately discard it.
       return
 
-<<<<<<< HEAD
     tracked_weights = set(v.ref() for v in self.weights)
     untracked_new_vars = [
         v for v in created_variables if v.ref() not in tracked_weights
     ]
     if untracked_new_vars:
       variable_str = '\n'.join('  {}'.format(i) for i in untracked_new_vars)
-=======
-    tracked_weights = set(v.experimental_ref() for v in self.weights)
-    untracked_new_vars = [v for v in created_variables
-                          if v.experimental_ref() not in tracked_weights]
-    if untracked_new_vars:
-      variable_str = '\n'.join(['  {}'.format(i) for i in untracked_new_vars])
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       error_str = textwrap.dedent(
           '''
           The following Variables were created within a Lambda layer ({name})
@@ -983,18 +944,11 @@ class Lambda(Layer):
       ).format(name=self.name, variable_str=variable_str)
       raise ValueError(error_str)
 
-<<<<<<< HEAD
     untracked_used_vars = [
         v for v in accessed_variables if v.ref() not in tracked_weights
     ]
     if untracked_used_vars and not self._already_warned:
       variable_str = '\n'.join('  {}'.format(i) for i in untracked_used_vars)
-=======
-    untracked_used_vars = [v for v in accessed_variables
-                           if v.experimental_ref() not in tracked_weights]
-    if untracked_used_vars and not self._already_warned:
-      variable_str = '\n'.join(['  {}'.format(i) for i in untracked_used_vars])
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       self._warn(textwrap.dedent(
           '''
           The following Variables were used a Lambda layer's call ({name}), but

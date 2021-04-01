@@ -29,7 +29,6 @@ from tensorflow.python.keras.engine.input_spec import InputSpec
 from tensorflow.python.keras.engine.base_layer import Layer
 from tensorflow.python.keras.engine.base_preprocessing_layer import PreprocessingLayer
 
-<<<<<<< HEAD
 # Image preprocessing layers.
 from tensorflow.python.keras.layers.preprocessing.image_preprocessing import CenterCrop
 from tensorflow.python.keras.layers.preprocessing.image_preprocessing import RandomCrop
@@ -57,18 +56,10 @@ if tf2.enabled():
   from tensorflow.python.keras.layers.preprocessing.string_lookup import StringLookup
   from tensorflow.python.keras.layers.preprocessing.string_lookup_v1 import StringLookup as StringLookupV1
   StringLookupV2 = StringLookup
-=======
-# Preprocessing layers.
-if tf2.enabled():
-  from tensorflow.python.keras.layers.preprocessing.normalization import Normalization
-  from tensorflow.python.keras.layers.preprocessing.normalization_v1 import Normalization as NormalizationV1
-  NormalizationV2 = Normalization
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   from tensorflow.python.keras.layers.preprocessing.text_vectorization import TextVectorization
   from tensorflow.python.keras.layers.preprocessing.text_vectorization_v1 import TextVectorization as TextVectorizationV1
   TextVectorizationV2 = TextVectorization
 else:
-<<<<<<< HEAD
   from tensorflow.python.keras.layers.preprocessing.integer_lookup_v1 import IntegerLookup
   from tensorflow.python.keras.layers.preprocessing.integer_lookup import IntegerLookup as IntegerLookupV2
   IntegerLookupV1 = IntegerLookup
@@ -87,14 +78,6 @@ else:
 from tensorflow.python.keras.layers.preprocessing.category_crossing import CategoryCrossing
 from tensorflow.python.keras.layers.preprocessing.discretization import Discretization
 from tensorflow.python.keras.layers.preprocessing.hashing import Hashing
-=======
-  from tensorflow.python.keras.layers.preprocessing.normalization_v1 import Normalization
-  from tensorflow.python.keras.layers.preprocessing.normalization import Normalization as NormalizationV2
-  NormalizationV1 = Normalization
-  from tensorflow.python.keras.layers.preprocessing.text_vectorization_v1 import TextVectorization
-  from tensorflow.python.keras.layers.preprocessing.text_vectorization import TextVectorization as TextVectorizationV2
-  TextVectorizationV1 = TextVectorization
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 # Advanced activations.
 from tensorflow.python.keras.layers.advanced_activations import LeakyReLU
@@ -192,11 +175,8 @@ from tensorflow.python.keras.layers.noise import GaussianDropout
 
 # Normalization layers.
 from tensorflow.python.keras.layers.normalization import LayerNormalization
-<<<<<<< HEAD
 from tensorflow.python.keras.layers.normalization_v2 import SyncBatchNormalization
 
-=======
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 if tf2.enabled():
   from tensorflow.python.keras.layers.normalization_v2 import BatchNormalization
   from tensorflow.python.keras.layers.normalization import BatchNormalization as BatchNormalizationV1

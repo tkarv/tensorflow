@@ -38,11 +38,7 @@ function run_build () {
   tag_filters="-no_oss,-no_oss_py2,-gpu,-tpu,-benchmark-test,-nomac,-no_mac,-v1only"
 
   # Get the default test targets for bazel.
-<<<<<<< HEAD
   source tensorflow/tools/ci_build/build_scripts/DEFAULT_TEST_TARGETS.sh
-=======
-  source tensorflow/tools/ci_build/build_scripts/PRESUBMIT_BUILD_TARGETS.sh
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
   "${BAZEL_WRAPPER_PATH}" \
     test \
@@ -64,13 +60,7 @@ function run_build () {
 }
 
 source tensorflow/tools/ci_build/release/common.sh
-<<<<<<< HEAD
 install_bazelisk
-=======
-update_bazel_macos
-which bazel
-set_bazel_outdir
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 setup_pip
 run_build

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # buildifier: disable=same-origin-load
 load("//tensorflow:tensorflow.bzl", "filegroup")
 
@@ -9,14 +8,6 @@ load("//tensorflow:tensorflow.bzl", "tf_gen_op_libs")
 load("//tensorflow:tensorflow.bzl", "tf_kernel_library")
 load("//tensorflow:tensorflow.bzl", "tf_cc_test")
 load("//tensorflow/core/platform:rules_cc.bzl", "cc_library")
-=======
-load(
-    "//tensorflow:tensorflow.bzl",
-    "tf_cc_test",
-    "tf_gen_op_libs",
-    "tf_kernel_library",
-)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 package(
     default_visibility = ["//visibility:public"],

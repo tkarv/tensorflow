@@ -1,5 +1,4 @@
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
-<<<<<<< HEAD
 load("@build_bazel_rules_apple//apple:macos.bzl", "macos_unit_test")
 load(
     "//tensorflow/lite:special_rules.bzl",
@@ -11,9 +10,6 @@ load(
     "//tensorflow/core/platform:build_config_root.bzl",
     "tf_gpu_tests_tags",
 )
-=======
-load("//tensorflow/lite:special_rules.bzl", "tflite_ios_per_kernel_test", "tflite_portable_test_suite")
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 package(
     default_visibility = ["//visibility:public"],

@@ -113,13 +113,10 @@ class IgnoreErrorsDatasetOp : public UnaryDatasetOpKernel {
           }
           s = input_impl_->GetNext(ctx, out_tensors, end_of_sequence);
           while (!s.ok() && !errors::IsCancelled(s)) {
-<<<<<<< HEAD
             if (dataset()->log_warning_) {
               LOG(WARNING) << "Error raised with error message "
                            << s.error_message();
             }
-=======
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
             out_tensors->clear();
             s = input_impl_->GetNext(ctx, out_tensors, end_of_sequence);
           }

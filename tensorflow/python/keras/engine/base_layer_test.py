@@ -1302,12 +1302,7 @@ class AutographControlFlowTest(keras_parameterized.TestCase):
     model.compile(
         'sgd',
         'mse',
-<<<<<<< HEAD
         run_eagerly=testing_utils.should_run_eagerly())
-=======
-        run_eagerly=testing_utils.should_run_eagerly(),
-        experimental_run_tf_function=testing_utils.should_run_tf_function())
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     for _ in range(3):
       _, train_metric = model.train_on_batch(np.ones((2, 3)),
                                              np.ones((2, 3)))

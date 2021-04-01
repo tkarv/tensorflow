@@ -257,11 +257,7 @@ class ClusterSpecValidationTest(test.TestCase):
         "ps": ["127.0.0.1:1926", "127.0.0.1:3141"]
     }
     multi_worker_util._validate_cluster_spec(cluster_spec, "evaluator", 0)
-<<<<<<< HEAD
     with self.assertRaisesRegex(
-=======
-    with self.assertRaisesRegexp(
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
         ValueError, "`task_type` 'worker' not found in cluster_spec."):
       multi_worker_util._validate_cluster_spec(cluster_spec, "worker", 0)
 

@@ -191,11 +191,7 @@ class PrefetchDatasetOp::Dataset : public DatasetBase {
         DCHECK_EQ(buffer_limit(), 0);
       }
 
-<<<<<<< HEAD
       mutex_lock input_l(input_mu_);
-=======
-      mutex_lock parent_l(*parent_mu_);
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       {
         mutex_lock l(*mu_);
         if (stats_aggregator) {
@@ -517,12 +513,8 @@ class PrefetchDatasetOp::Dataset : public DatasetBase {
 
     // This mutex is used to ensure exclusivity between multiple threads
     // reading/writing this iterator's local state.
-<<<<<<< HEAD
     //
     // NOTE: We should never call GetNext on the input while holding this mutex.
-=======
-    // Note: We should never call GetNext on the input while holding this.
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     const std::shared_ptr<mutex> mu_;
     // This mutex is used to ensure exclusivity between multiple threads
     // accessing the input iterator. We keep this separate from `mu_` to allow

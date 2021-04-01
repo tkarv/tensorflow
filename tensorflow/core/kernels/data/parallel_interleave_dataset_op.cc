@@ -336,11 +336,8 @@ class ParallelInterleaveDatasetOp::Dataset : public DatasetBase {
       if (num_parallel_calls_->value == model::kAutotune) {
         num_parallel_calls_->value = dataset()->cycle_length_;
       }
-<<<<<<< HEAD
       // TODO(jsimsa): Register cancellation callback once the implementation is
       // refactored not to hold mu_ while calling `GetNext` on the input.
-=======
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       ctx_ = std::make_unique<IteratorContext>(*ctx);
       TF_RETURN_IF_ERROR(
           dataset()->input_->MakeIterator(ctx, this, prefix(), &input_impl_));
@@ -605,11 +602,7 @@ class ParallelInterleaveDatasetOp::Dataset : public DatasetBase {
 
     // Advances the position in the interleave cycle to the next cycle
     // element.
-<<<<<<< HEAD
     void AdvanceToNextInCycle() TF_EXCLUSIVE_LOCKS_REQUIRED(mu_) {
-=======
-    void AdvanceToNextInCycle() EXCLUSIVE_LOCKS_REQUIRED(mu_) {
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       DCHECK_NE(last_valid_current_element_, -1);
       block_index_ = 0;
       cycle_index_ = (cycle_index_ + 1) % (last_valid_current_element_ + 1);
@@ -1425,14 +1418,7 @@ class ParallelInterleaveDatasetOp::Dataset : public DatasetBase {
     // TODO(aaudibert): Generalize this optimization by removing null elements
     // from `current_elements_`, e.g. by compacting the vector when x% of
     // its elements are null.
-<<<<<<< HEAD
     int64 last_valid_current_element_ TF_GUARDED_BY(mu_) = -1;
-=======
-    int64 last_valid_current_element_ GUARDED_BY(mu_) = -1;
-
-    const int per_iterator_prefetch_;
-    const int future_elements_prefetch_;
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
     // Identifies whether the current_elements_ vector has been initialized.
     bool initial_elements_created_ TF_GUARDED_BY(mu_) = false;
@@ -1489,17 +1475,10 @@ class ParallelInterleaveDatasetOp::Dataset : public DatasetBase {
     std::unique_ptr<IteratorBase> input_impl_ TF_GUARDED_BY(mu_);
 
     // Identifies position in the interleave cycle.
-<<<<<<< HEAD
     int64 block_index_ TF_GUARDED_BY(mu_) = 0;
     // It is an invariant that either `last_valid_current_element_ == -1` or
     // `cycle_index_ <= last_valid_current_element_`.
     int64 cycle_index_ TF_GUARDED_BY(mu_) = 0;
-=======
-    int64 block_index_ GUARDED_BY(mu_) = 0;
-    // It is an invariant that either `last_valid_current_element_ == -1` or
-    // `cycle_index_ <= last_valid_current_element_`.
-    int64 cycle_index_ GUARDED_BY(mu_) = 0;
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
     // Elements of the current interleave cycle.
     std::vector<std::shared_ptr<Element>> current_elements_ TF_GUARDED_BY(mu_);

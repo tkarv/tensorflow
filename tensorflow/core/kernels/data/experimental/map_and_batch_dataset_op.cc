@@ -194,7 +194,6 @@ class MapAndBatchDatasetOp::Dataset : public DatasetBase {
           mu_(std::make_shared<mutex>()),
           cond_var_(std::make_shared<condition_variable>()),
           num_parallel_calls_(std::make_shared<model::SharedState>(
-<<<<<<< HEAD
               params.dataset->num_parallel_calls_, mu_, cond_var_)) {
       // To mitigate the effect of stragglers (i.e. map invocations that take
       // much longer than others), we allow the kernel to pre-compute batches
@@ -207,26 +206,6 @@ class MapAndBatchDatasetOp::Dataset : public DatasetBase {
                       ? port::NumSchedulableCPUs()  // maximum parallelism
                       : params.dataset->num_parallel_calls_,
                   params.dataset->batch_size_));
-=======
-              params.dataset->num_parallel_calls_, mu_, cond_var_)),
-          max_batch_results_(
-              params.dataset->num_parallel_calls_ == model::kAutotune
-                  ? kMaxBatchResults
-                  : std::min(kMaxBatchResults,
-                             (params.dataset->num_parallel_calls_ +
-                              params.dataset->batch_size_ - 1) /
-                                 params.dataset->batch_size_)) {}
-
-    ~Iterator() override {
-      mutex_lock l(*mu_);
-      // Cancel the runner thread.
-      cancelled_ = true;
-      cond_var_->notify_all();
-      // Wait for all in-flight calls to complete.
-      while (num_calls_ > 0) {
-        cond_var_->wait(l);
-      }
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     }
 
     ~Iterator() override {

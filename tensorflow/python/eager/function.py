@@ -155,10 +155,7 @@ CacheKey = collections.namedtuple("CacheKey", [
     "device_functions",
     "colocation_stack",
     "in_cross_replica_context",
-<<<<<<< HEAD
     "variable_policy",
-=======
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     "xla_context_id",
 ])
 
@@ -367,23 +364,6 @@ def _backward_name(n):
 def _inference_name(n):
   """The name of a forward-but-no-gradient defun named n."""
   return "%s%s_%s" % (_INFERENCE_PREFIX, n, ops.uid())
-
-
-def _enclosing_xla_context():
-  """Returns the XLAControlFlowContext, which exists inside a tpu.rewrite()."""
-  graph = ops.get_default_graph()
-  while graph is not None:
-    # pylint: disable=protected-access
-    context_ = graph._get_control_flow_context()
-    # pylint: enable=protected-access
-    while context_ is not None:
-      if isinstance(context_, control_flow_ops.XLAControlFlowContext):
-        return context_
-      context_ = context_.outer_context
-    # This may be a FuncGraph due to defuns or v2 control flow. We need to
-    # find the original graph with the XLAControlFlowContext.
-    graph = getattr(graph, "outer_graph", None)
-  return None
 
 
 def _enclosing_xla_context():
@@ -3142,16 +3122,10 @@ class Function(object):
     if not executing_eagerly:
       # We want to force function retracing for each different
       # XLAControlFlowContext, so add `xla_context_id` to the cache key.
-<<<<<<< HEAD
       xla_context = _enclosing_xla_context()
       if xla_context is not None and \
             xla_context.RequiresUniqueFunctionRetracing():
         xla_context_id = id(xla_context)
-=======
-      tpu_context = _enclosing_xla_context()
-      if tpu_context is not None:
-        xla_context_id = id(tpu_context)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
       with ops.init_scope():
         # The graph, or whether we're executing eagerly, should be a part of the
@@ -3192,7 +3166,6 @@ class Function(object):
     except (AttributeError, IndexError):
       pass
 
-<<<<<<< HEAD
     if save_context.in_save_context():
       variable_policy = (
           save_context.get_save_options().experimental_variable_policy)
@@ -3201,12 +3174,6 @@ class Function(object):
 
     return (parent_graph, device_functions, colocation_stack,
             in_cross_replica_context, variable_policy, xla_context_id)
-=======
-    return CacheKey(
-        _make_input_signature_hashable(input_signature), parent_graph,
-        device_functions, colocation_stack, in_cross_replica_context,
-        xla_context_id)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
   def _create_graph_function(self, args, kwargs, override_flat_arg_shapes=None):
     """Create a `ConcreteFunction` from `args` and `kwargs`."""
@@ -3929,12 +3896,8 @@ def class_method_to_instance_method(original_function, instance):
       name=original_function._name,
       autograph=original_function._autograph,
       input_signature=original_function.input_signature,
-<<<<<<< HEAD
       experimental_relax_shapes=original_function._experimental_relax_shapes,
       experimental_compile=original_function._experimental_compile)
-=======
-      experimental_relax_shapes=original_function._experimental_relax_shapes)
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   # pylint: enable=protected-access
 
   # And we wrap the function with tf_decorator so inspection works correctly

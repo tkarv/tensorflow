@@ -135,7 +135,6 @@ def _running_from_pip_package():
       _current_file_location.startswith(dir_) for dir_ in _site_packages_dirs)
 
 if _running_from_pip_package():
-<<<<<<< HEAD
   # TODO(gunan): Add sanity checks to loaded modules here.
   for _s in _site_packages_dirs:
     # Load first party dynamic kernels.
@@ -146,12 +145,6 @@ if _running_from_pip_package():
     # Load third party dynamic kernels.
     _plugin_dir = _os.path.join(_s, 'tensorflow-plugins')
     if _os.path.exists(_plugin_dir):
-=======
-  for _s in _site_packages_dirs:
-    # TODO(gunan): Add sanity checks to loaded modules here.
-    _plugin_dir = _os.path.join(_s, 'tensorflow-plugins')
-    if _fi.file_exists(_plugin_dir):
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       _ll.load_library(_plugin_dir)
 
 # Add module aliases
@@ -166,7 +159,6 @@ if hasattr(_current_module, 'keras'):
   setattr(_current_module, "initializers", initializers)
 # pylint: enable=undefined-variable
 
-<<<<<<< HEAD
 # Delete modules that should be hidden from dir().
 # Don't fail if these modules are not available.
 # For e.g. this file will be originally placed under tensorflow/_api/v1 which
@@ -186,6 +178,4 @@ try:
 except NameError:
   pass
 
-=======
->>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 # __all__ PLACEHOLDER
