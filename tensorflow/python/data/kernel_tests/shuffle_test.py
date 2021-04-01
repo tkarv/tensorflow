@@ -331,6 +331,7 @@ class ShuffleTest(test_base.DatasetTestBase, parameterized.TestCase):
     with self.assertRaises(errors.OutOfRangeError):
       self.evaluate(get_next())
 
+<<<<<<< HEAD
   @combinations.generate(
       combinations.times(
           test_base.default_test_combinations(),
@@ -367,6 +368,8 @@ class ShuffleTest(test_base.DatasetTestBase, parameterized.TestCase):
     manager.save()
     ckpt.restore(manager.latest_checkpoint)
 
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 if __name__ == "__main__":
   test.main()

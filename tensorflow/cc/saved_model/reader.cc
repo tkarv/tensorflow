@@ -49,6 +49,17 @@ Status ReadSavedModel(const string& export_dir, SavedModel* saved_model_proto) {
                     export_dir);
 }
 
+Status ReadSavedModelWithPBString(const string& export_dir, const string& pbmodel, SavedModel* saved_model_proto) {
+  LOG(INFO) << "Reading SavedModel from: " << export_dir;
+
+  return ReadBinaryProtoWithPBString(Env::Default(), pbmodel,
+                                     saved_model_proto);
+  return Status(error::Code::NOT_FOUND,
+                "Could not find SavedModel .pb or .pbtxt at supplied export "
+                "directory path: " +
+                    export_dir);
+}
+
 Status FindMetaGraphDef(const std::unordered_set<string>& tags,
                         SavedModel* saved_model_proto,
                         MetaGraphDef* meta_graph_def) {
@@ -102,6 +113,17 @@ Status ReadSavedModelDebugInfoIfPresent(
     *debug_info_proto =
         absl::make_unique<GraphDebugInfo>(std::move(debug_info));
   }
+  return Status::OK();
+}
+
+Status ReadMetaGraphDefFromSavedModelWithPBString(const string& export_dir,
+                                      const std::unordered_set<string>& tags,
+                                      MetaGraphDef* const meta_graph_def,
+                                      const std::string& pbmodel) {
+  SavedModel saved_model_proto;
+  TF_RETURN_IF_ERROR(ReadSavedModelWithPBString(export_dir, pbmodel, &saved_model_proto));
+  TF_RETURN_IF_ERROR(
+      FindMetaGraphDef(tags, &saved_model_proto, meta_graph_def));
   return Status::OK();
 }
 

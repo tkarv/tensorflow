@@ -38,7 +38,12 @@ from tensorflow.python.platform import test
 
 _DATA_TYPES = [dtypes.half, dtypes.float32, dtypes.float64]
 # TODO(b/143684500): Eigen to support complex sqrt
+<<<<<<< HEAD
 if not test_util.IsBuiltWithNvcc():
+=======
+if not test_util.IsBuiltWithNvcc() and platform.system() != "Windows" \
+   and not test.is_built_with_rocm():
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   _DATA_TYPES += [dtypes.complex64, dtypes.complex128]
 
 

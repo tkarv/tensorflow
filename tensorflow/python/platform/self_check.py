@@ -43,9 +43,15 @@ def preload_check():
     # we load the Python extension, so that we can raise an actionable error
     # message if they are not found.
     import ctypes  # pylint: disable=g-import-not-at-top
+<<<<<<< HEAD
     if MSVCP_DLL_NAMES in build_info.build_info:
       missing = []
       for dll_name in build_info.build_info[MSVCP_DLL_NAMES].split(","):
+=======
+    if hasattr(build_info, "msvcp_dll_names"):
+      missing = []
+      for dll_name in build_info.msvcp_dll_names.split(","):
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
         try:
           ctypes.WinDLL(dll_name)
         except OSError:

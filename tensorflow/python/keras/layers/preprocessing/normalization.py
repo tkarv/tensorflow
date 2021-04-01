@@ -38,6 +38,7 @@ _MEAN_NAME = 'mean'
 _VARIANCE_NAME = 'variance'
 
 
+<<<<<<< HEAD
 def convert_to_ndarray(values):
   if isinstance(values, np.ndarray):
     return values
@@ -49,6 +50,11 @@ def convert_to_ndarray(values):
 
 @keras_export('keras.layers.experimental.preprocessing.Normalization', v1=[])
 class Normalization(base_preprocessing_layer.CombinerPreprocessingLayer):
+=======
+# TODO(momernick): Find a good example of normalization?
+@keras_export('keras.layers.experimental.preprocessing.Normalization', v1=[])
+class Normalization(CombinerPreprocessingLayer):
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   """Feature-wise normalization of the data.
 
   This layer will coerce its inputs into a distribution centered around

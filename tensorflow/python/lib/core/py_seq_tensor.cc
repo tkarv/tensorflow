@@ -23,9 +23,13 @@ limitations under the License.
 #include "tensorflow/core/framework/types.h"
 #include "tensorflow/core/lib/core/errors.h"
 #include "tensorflow/core/lib/strings/str_util.h"
+<<<<<<< HEAD
 #include "tensorflow/core/platform/errors.h"
 #include "tensorflow/core/platform/macros.h"
 #include "tensorflow/core/platform/tstring.h"
+=======
+#include "tensorflow/core/platform/macros.h"
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/python/lib/core/ndarray_tensor.h"
 #include "tensorflow/python/lib/core/ndarray_tensor_bridge.h"
@@ -540,11 +544,14 @@ struct ConverterTraits<Eigen::half> {
     return tensorflow::unwrap(ctx)->CreateHalfScalar(value);
   }
 
+<<<<<<< HEAD
   static AbstractTensorInterface* CreateTensor(
       TFE_Context* ctx, absl::Span<const int64> dim_sizes) {
     return tensorflow::unwrap(ctx)->CreateTensor(DT_HALF, dim_sizes);
   }
 
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   static const char* ConvertScalar(PyObject* v, Eigen::half* out) {
     return ConvertOneFloat<Eigen::half>(v, out);
   }
@@ -791,7 +798,12 @@ TFE_TensorHandle* PySeqToTFE_TensorHandle(TFE_Context* ctx, PyObject* obj,
       break;
 
     case DT_HALF:
+<<<<<<< HEAD
       status = NumpyHalfConverter::Convert(ctx, obj, &state, &handle, &error);
+=======
+      if (NumpyHalfConverter::Convert(obj, shape, ret) == nullptr)
+        return Status::OK();
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
       break;
 
     case DT_INT64:

@@ -87,10 +87,13 @@ REGISTER_REWRITE(EagerOpRewriteRegistry::PRE_EXECUTION, MklEagerOpRewrite);
 // Constructor
 MklEagerOpRewrite::MklEagerOpRewrite(string name, string file, string line)
     : EagerOpRewrite(name, file, line), registered_kernels_map_() {
+<<<<<<< HEAD
   InsertMKLEagerOps({"AvgPool", AlwaysRewrite, CreateGenericMklOp});
   InsertMKLEagerOps({"AvgPoolGrad", AlwaysRewrite, CreateGenericMklOp});
   InsertMKLEagerOps({"AvgPool3D", AlwaysRewrite, CreateGenericMklOp});
   InsertMKLEagerOps({"AvgPool3DGrad", AlwaysRewrite, CreateGenericMklOp});
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   InsertMKLEagerOps({"BatchMatMul", AlwaysRewrite, CreateGenericMklOp});
   InsertMKLEagerOps({"BatchMatMulV2", AlwaysRewrite, CreateGenericMklOp});
   InsertMKLEagerOps({"Conv2D", RewriteConv2D, CreateGenericMklOp});

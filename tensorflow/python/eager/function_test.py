@@ -413,6 +413,7 @@ class FunctionTest(test.TestCase, parameterized.TestCase):
     foo.func(constant_op.constant([1.0, 2.0]))
     self.assertTrue(unknown_dim[0])
 
+<<<<<<< HEAD
   def testInputShapeFunctionRelaxationWithRaggedTensors(self):
     traced_type_spec = [None]
 
@@ -532,6 +533,8 @@ class FunctionTest(test.TestCase, parameterized.TestCase):
         iterator_ops.IteratorSpec(
             tensor_spec.TensorSpec([None, None], dtypes.float32)))
 
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   def testCapturesVariables(self):
     a = variables.Variable(1.0, trainable=False)
     b = variables.Variable(1.0)

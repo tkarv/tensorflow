@@ -685,8 +685,11 @@ class Function(object):
         attributes=attributes,
         autograph=self._autograph,
         experimental_autograph_options=self._experimental_autograph_options,
+<<<<<<< HEAD
         experimental_compile=self._experimental_compile,
         experimental_follow_type_hints=self._experimental_follow_type_hints,
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
         experimental_relax_shapes=self._experimental_relax_shapes)
 
   def _initialize(self, args, kwds, add_initializers_to=None):
@@ -745,6 +748,7 @@ class Function(object):
         experimental_implements=self._implements,
         experimental_autograph_options=self._experimental_autograph_options,
         experimental_relax_shapes=self._experimental_relax_shapes,
+<<<<<<< HEAD
         experimental_compile=self._experimental_compile,
         experimental_follow_type_hints=self._experimental_follow_type_hints)
 
@@ -752,6 +756,9 @@ class Function(object):
       f._shared_rendezvous = self._shared_rendezvous  # pylint: disable=protected-access
 
     return f
+=======
+        experimental_compile=self._experimental_compile)
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
   def _decorate(self, decorator):
     """Allows the captured Python function to be decorated in place.

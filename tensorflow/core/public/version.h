@@ -21,7 +21,11 @@ limitations under the License.
 // Also update tensorflow/tensorflow.bzl and
 // tensorflow/tools/pip_package/setup.py
 #define TF_MAJOR_VERSION 2
+<<<<<<< HEAD
 #define TF_MINOR_VERSION 4
+=======
+#define TF_MINOR_VERSION 1
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 #define TF_PATCH_VERSION 1
 
 // TF_VERSION_SUFFIX is non-empty for pre-releases (e.g. "-alpha", "-alpha.1",

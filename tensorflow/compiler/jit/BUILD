@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 load("//tensorflow/core/platform:rules_cc.bzl", "cc_library")
 
 # buildifier: disable=same-origin-load
@@ -5,6 +6,9 @@ load("//tensorflow:tensorflow.bzl", "cc_header_only_library", "if_mlir", "tf_cc_
 
 # buildifier: disable=same-origin-load
 load("//tensorflow:tensorflow.bzl", "if_libtpu", "tf_copts")
+=======
+load("//tensorflow:tensorflow.bzl", "cc_header_only_library", "if_mlir", "tf_cc_test")
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 load("//tensorflow/stream_executor:build_defs.bzl", "if_cuda_or_rocm")
 
 # buildifier: disable=same-origin-load

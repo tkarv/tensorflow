@@ -28,6 +28,18 @@ export CONTAINER_TYPE="GPU"
 export TF_PYTHON_VERSION='python3.6'
 
 # Run configure.
+<<<<<<< HEAD
+=======
+export TF_NEED_GCP=1
+export TF_NEED_HDFS=1
+export TF_NEED_S3=1
+export TF_NEED_CUDA=1
+export TF_CUDA_VERSION=10.1
+export TF_CUDNN_VERSION=7
+export TF_NEED_TENSORRT=1
+export TENSORRT_INSTALL_PATH=/usr/local/tensorrt
+export CC_OPT_FLAGS='-mavx'
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 export PYTHON_BIN_PATH=$(which ${TF_PYTHON_VERSION})
 yes "" | "$PYTHON_BIN_PATH" configure.py
 

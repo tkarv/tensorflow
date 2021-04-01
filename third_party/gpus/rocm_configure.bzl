@@ -174,8 +174,31 @@ def _rocm_include_path(repository_ctx, rocm_config, bash_bin):
     """
     inc_dirs = []
 
+<<<<<<< HEAD
     # Add HSA headers (needs to match $HSA_PATH)
     inc_dirs.append(rocm_config.rocm_toolkit_path + "/hsa/include")
+=======
+    # general ROCm include path
+    inc_dirs.append(rocm_config.rocm_toolkit_path + "/include")
+
+    # Add HSA headers
+    inc_dirs.append("/opt/rocm/hsa/include")
+
+    # Add HIP headers
+    inc_dirs.append("/opt/rocm/include/hip")
+    inc_dirs.append("/opt/rocm/include/hip/hcc_detail")
+    inc_dirs.append("/opt/rocm/hip/include")
+
+    # Add HIP-Clang headers
+    inc_dirs.append("/opt/rocm/llvm/lib/clang/8.0/include")
+    inc_dirs.append("/opt/rocm/llvm/lib/clang/9.0.0/include")
+    inc_dirs.append("/opt/rocm/llvm/lib/clang/10.0.0/include")
+    inc_dirs.append("/opt/rocm/llvm/lib/clang/11.0.0/include")
+
+    # Add rocrand and hiprand headers
+    inc_dirs.append("/opt/rocm/rocrand/include")
+    inc_dirs.append("/opt/rocm/hiprand/include")
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
     # Add HIP headers (needs to match $HIP_PATH)
     inc_dirs.append(rocm_config.rocm_toolkit_path + "/hip/include")
@@ -194,6 +217,10 @@ def _rocm_include_path(repository_ctx, rocm_config, bash_bin):
 
     # Add hcc headers
     inc_dirs.append(rocm_toolkit_path + "/hcc/include")
+
+    # Support hcc based off clang 11.0.0, included in ROCm3.1
+    inc_dirs.append("/opt/rocm/hcc/compiler/lib/clang/11.0.0/include/")
+    inc_dirs.append("/opt/rocm/hcc/lib/clang/11.0.0/include")
 
     return inc_dirs
 
@@ -245,6 +272,54 @@ def _hipcc_env(repository_ctx):
             hipcc_env = (hipcc_env + " " + name + "=\"" + env_value + "\";")
     return hipcc_env.strip()
 
+<<<<<<< HEAD
+=======
+def _hipcc_is_hipclang(repository_ctx):
+    """Returns if hipcc is based on hip-clang toolchain.
+
+    Args:
+        repository_ctx: The repository context.
+
+    Returns:
+        A string "True" if hipcc is based on hip-clang toolchain.
+        The functions returns "False" if not (ie: based on HIP/HCC toolchain).
+    """
+
+    #  check user-defined hip-clang environment variables
+    for name in ["HIP_CLANG_PATH", "HIP_VDI_HOME"]:
+        if name in repository_ctx.os.environ:
+            return "True"
+
+    # grep for "HIP_COMPILER=clang" in /opt/rocm/hip/lib/.hipInfo
+    grep_result = _execute(
+        repository_ctx,
+        ["grep", "HIP_COMPILER=clang", "/opt/rocm/hip/lib/.hipInfo"],
+        empty_stdout_fine = True,
+    )
+    result = grep_result.stdout.strip()
+    if result == "HIP_COMPILER=clang":
+        return "True"
+    return "False"
+
+def _if_hipcc_is_hipclang(repository_ctx, if_true, if_false = []):
+    """
+    Returns either the if_true or if_false arg based on whether hipcc
+    is based on the hip-clang toolchain
+
+    Args :
+        repository_ctx: The repository context.
+        if_true : value to return if hipcc is hip-clang based
+        if_false : value to return if hipcc is not hip-clang based
+                   (optional, defaults to empty list)
+
+    Returns :
+        either the if_true arg or the of_False arg
+    """
+    if _hipcc_is_hipclang(repository_ctx) == "True":
+        return if_true
+    return if_false
+
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 def _crosstool_verbose(repository_ctx):
     """Returns the environment variable value CROSSTOOL_VERBOSE.
 

@@ -408,10 +408,16 @@ class ApiCompatibilityTest(test.TestCase):
     api_version = 1
     if hasattr(tf, '_major_api_version') and tf._major_api_version == 2:
       api_version = 2
+<<<<<<< HEAD
     golden_file_patterns = [
         os.path.join(resource_loader.get_root_dir_with_all_resources(),
                      _KeyToFilePath('*', api_version)),
         _GetTFNumpyGoldenPattern(api_version)]
+=======
+    golden_file_pattern = os.path.join(
+        resource_loader.get_root_dir_with_all_resources(),
+        _KeyToFilePath('*', api_version))
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     omit_golden_symbols_map = {}
     if (api_version == 2 and FLAGS.only_test_core_api and
         not _TENSORBOARD_AVAILABLE):

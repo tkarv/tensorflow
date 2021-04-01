@@ -667,7 +667,11 @@ if [[ "$BUILD_BOTH_GPU_PACKAGES" -eq "1" ]] || [[ "$BUILD_BOTH_CPU_PACKAGES" -eq
         "\"${CONTAINER_TYPE}\" instead."
   fi
   if [[ "$PROJECT_NAME" == *_${PROJECT_SUFFIX} ]]; then
+<<<<<<< HEAD
     NEW_PROJECT_NAME=${PROJECT_NAME}"_${PROJECT_SUFFIX}"
+=======
+    NEW_PROJECT_NAME=${PROJECT_NAME%"_${PROJECT_SUFFIX}"}
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
   else
     NEW_PROJECT_NAME="${PROJECT_NAME}_${PROJECT_SUFFIX}"
   fi

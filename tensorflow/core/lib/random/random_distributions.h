@@ -18,6 +18,11 @@ limitations under the License.
 
 #include <string.h>
 
+<<<<<<< HEAD
+=======
+#include <cmath>
+
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 #include <algorithm>
 #include <cmath>
 #include <type_traits>

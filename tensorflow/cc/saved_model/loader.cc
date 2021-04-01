@@ -265,6 +265,52 @@ Status LoadSavedModelInternal(const SessionOptions& session_options,
   return Status::OK();
 }
 
+Status LoadSavedModelInternalWithPBString(const SessionOptions& session_options,
+                              const RunOptions& run_options,
+                              const string& export_dir,
+                              const std::unordered_set<string>& tags,
+                              SavedModelBundle* const bundle,
+                              const string& pbmodel) {
+  const uint64 read_start_microseconds = Env::Default()->NowMicros();
+  TF_RETURN_IF_ERROR(ReadMetaGraphDefFromSavedModelWithPBString(export_dir, tags,
+                                                    &bundle->meta_graph_def, pbmodel));
+  TF_RETURN_IF_ERROR(
+      ReadSavedModelDebugInfoIfPresent(export_dir, &bundle->debug_info));
+  TF_RETURN_IF_ERROR(LoadMetaGraphIntoSession(
+      bundle->meta_graph_def, session_options, &bundle->session));
+
+  std::vector<AssetFileDef> asset_file_defs;
+  TF_RETURN_IF_ERROR(
+      GetAssetFileDefs(bundle->meta_graph_def, &asset_file_defs));
+  TF_RETURN_IF_ERROR(
+      RunRestore(run_options, export_dir,
+                 bundle->meta_graph_def.saver_def().restore_op_name(),
+                 bundle->meta_graph_def.saver_def().filename_tensor_name(),
+                 asset_file_defs, bundle->session.get()));
+  // Record walltime spent in restoring graph from disk, but postpone metric
+  // increments until graph init finishes.
+  const uint64 restore_graph_walltime =
+      GetLatencyMicroseconds(read_start_microseconds);
+
+  const uint64 graph_init_start_microseconds = Env::Default()->NowMicros();
+  string init_op_name;
+  TF_RETURN_IF_ERROR(
+      GetInitOp(export_dir, bundle->meta_graph_def, &init_op_name));
+  TF_RETURN_IF_ERROR(RunInitOp(run_options, export_dir, bundle->meta_graph_def,
+                               asset_file_defs, bundle->session.get(),
+                               init_op_name));
+  load_latency_by_stage->GetCell(export_dir, "restore_graph")
+      ->Add(restore_graph_walltime);
+  // Record wall time spent in init op.
+  load_latency_by_stage->GetCell(export_dir, "init_graph")
+      ->Add(GetLatencyMicroseconds(graph_init_start_microseconds));
+  return Status::OK();
+}
+
+}  // namespace
+
+SavedModelBundleInterface::~SavedModelBundleInterface() {}
+
 Status LoadSavedModel(const SessionOptions& session_options,
                       const RunOptions& run_options, const string& export_dir,
                       const std::unordered_set<string>& tags,
@@ -273,6 +319,30 @@ Status LoadSavedModel(const SessionOptions& session_options,
   const uint64 start_microseconds = Env::Default()->NowMicros();
   const Status status = LoadSavedModelInternal(session_options, run_options,
                                                export_dir, tags, bundle);
+  auto log_and_count = [&](const string& status_str) {
+    LOG(INFO) << "SavedModel load for tags { " << absl::StrJoin(tags, " ")
+              << " }; Status: " << status_str << ": " << status << ". Took "
+              << GetLatencyMicroseconds(start_microseconds) << " microseconds.";
+    load_attempt_count->GetCell(export_dir, status_str)->IncrementBy(1);
+  };
+  if (status.ok()) {
+    log_and_count(kLoadAttemptSuccess);
+  } else {
+    log_and_count(kLoadAttemptFail);
+  }
+  load_latency->GetCell(export_dir)
+      ->IncrementBy(GetLatencyMicroseconds(start_microseconds));
+  return status;
+}
+
+Status LoadSavedModelWithStringPB(const SessionOptions& session_options,
+                      const RunOptions& run_options, const string& export_dir,
+                      const std::unordered_set<string>& tags,
+                      SavedModelBundle* const bundle, const std::string& pbmodel) {
+  // TODO(robson): Add tests for the counters.
+  const uint64 start_microseconds = Env::Default()->NowMicros();
+  const Status status = LoadSavedModelInternalWithPBString(session_options, run_options,
+                                               export_dir, tags, bundle, pbmodel);
   auto log_and_count = [&](const string& status_str) {
     LOG(INFO) << "SavedModel load for tags { " << absl::StrJoin(tags, " ")
               << " }; Status: " << status_str << ": " << status << ". Took "

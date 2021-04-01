@@ -144,6 +144,7 @@ def _running_from_pip_package():
       _current_file_location.startswith(dir_) for dir_ in _site_packages_dirs)
 
 if _running_from_pip_package():
+<<<<<<< HEAD
   # TODO(gunan): Add sanity checks to loaded modules here.
   for _s in _site_packages_dirs:
     # Load first party dynamic kernels.
@@ -176,5 +177,12 @@ try:
 except NameError:
   pass
 
+=======
+  for _s in _site_packages_dirs:
+    # TODO(gunan): Add sanity checks to loaded modules here.
+    _plugin_dir = _os.path.join(_s, 'tensorflow-plugins')
+    if _fi.file_exists(_plugin_dir):
+      _ll.load_library(_plugin_dir)
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 # __all__ PLACEHOLDER

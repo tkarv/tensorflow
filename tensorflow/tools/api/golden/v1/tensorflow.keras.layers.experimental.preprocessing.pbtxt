@@ -1,6 +1,7 @@
 path: "tensorflow.keras.layers.experimental.preprocessing"
 tf_module {
   member {
+<<<<<<< HEAD
     name: "CategoryCrossing"
     mtype: "<type \'type\'>"
   }
@@ -25,6 +26,8 @@ tf_module {
     mtype: "<type \'type\'>"
   }
   member {
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     name: "Normalization"
     mtype: "<type \'type\'>"
   }
@@ -33,6 +36,7 @@ tf_module {
     mtype: "<type \'type\'>"
   }
   member {
+<<<<<<< HEAD
     name: "RandomContrast"
     mtype: "<type \'type\'>"
   }
@@ -77,6 +81,8 @@ tf_module {
     mtype: "<type \'type\'>"
   }
   member {
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     name: "TextVectorization"
     mtype: "<type \'type\'>"
   }

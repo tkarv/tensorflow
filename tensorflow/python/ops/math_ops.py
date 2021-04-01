@@ -226,6 +226,7 @@ tf_export(v1=["arg_max"])(dispatch.add_dispatch_support(arg_max))
 tf_export(v1=["arg_min"])(dispatch.add_dispatch_support(arg_min))
 
 
+
 # This is set by resource_variable_ops.py. It is included in this way since
 # there is a circular dependency between math_ops and resource_variable_ops
 _resource_variable_type = None
@@ -4739,6 +4740,7 @@ def reciprocal_no_nan(x, name=None):
     return gen_math_ops.div_no_nan(one, x, name=scope)
 
 
+<<<<<<< HEAD
 @tf_export("math.xlog1py")
 @dispatch.add_dispatch_support
 def xlog1py(x, y, name=None):
@@ -4776,6 +4778,8 @@ def xlog1py(x, y, name=None):
     return gen_math_ops.xlog1py(x, y)
 
 
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 @tf_export("math.erfinv")
 @dispatch.add_dispatch_support
 def erfinv(x, name=None):
@@ -4807,6 +4811,7 @@ def ndtri(x, name=None):
   """
   with ops.name_scope(name, "ndtri", [x]):
     return gen_math_ops.ndtri(x)
+<<<<<<< HEAD
 
 
 @tf_export("math.erfcinv")
@@ -5060,3 +5065,5 @@ def floor(x, name=None):
     A `Tensor`. Has the same type as x.
   """
   return gen_math_ops.floor(x, name)
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf

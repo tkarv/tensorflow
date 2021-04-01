@@ -33,7 +33,7 @@ except ImportError:
   from distutils.spawn import find_executable as which
 # pylint: enable=g-import-not-at-top
 
-_DEFAULT_CUDA_VERSION = '10'
+_DEFAULT_CUDA_VERSION = '10.1'
 _DEFAULT_CUDNN_VERSION = '7'
 _DEFAULT_TENSORRT_VERSION = '6'
 _DEFAULT_CUDA_COMPUTE_CAPABILITIES = '3.5,7.0'
@@ -1200,8 +1200,57 @@ def is_reduced_optimize_huge_functions_available(environ_cp):
   return float(environ_cp.get('TF_VC_VERSION', '0')) >= 16.4
 
 
+def is_reduced_optimize_huge_functions_available(environ_cp):
+  """Check to see if the system supports /d2ReducedOptimizeHugeFunctions.
+
+  The above compiler flag is a new compiler flag introduced to the Visual Studio
+  compiler in version 16.4 (available in Visual Studio 2019, Preview edition
+  only, as of 2019-11-19). TensorFlow needs this flag to massively reduce
+  compile times, but until 16.4 is officially released, we can't depend on it.
+
+  See also https://groups.google.com/a/tensorflow.org/g/build/c/SsW98Eo7l3o
+
+  Because it's very annoying to check this manually (to check the MSVC installed
+  versions, you need to use the registry, and it's not clear if Bazel will be
+  using that install version anyway), we expect enviroments who know they may
+  use this flag to export TF_VC_VERSION=16.4
+
+  TODO(angerson, gunan): Remove this function when TensorFlow's minimum VS
+  version is upgraded to 16.4.
+
+  Arguments:
+    environ_cp: Environment of the current execution
+
+  Returns:
+    boolean, whether or not /d2ReducedOptimizeHugeFunctions is available on this
+    machine.
+  """
+  return float(environ_cp.get('TF_VC_VERSION', '0')) >= 16.4
+
+
 def set_windows_build_flags(environ_cp):
   """Set Windows specific build options."""
+<<<<<<< HEAD
+  if is_reduced_optimize_huge_functions_available(environ_cp):
+    write_to_bazelrc(
+        'build --copt=/d2ReducedOptimizeHugeFunctions --host_copt=/d2ReducedOptimizeHugeFunctions'
+    )
+=======
+  # The non-monolithic build is not supported yet
+  write_to_bazelrc('build --config monolithic')
+  # Suppress warning messages
+  write_to_bazelrc('build --copt=-w --host_copt=-w')
+  # Fix winsock2.h conflicts
+  write_to_bazelrc(
+      'build --copt=-DWIN32_LEAN_AND_MEAN --host_copt=-DWIN32_LEAN_AND_MEAN '
+      '--copt=-DNOGDI --host_copt=-DNOGDI --copt=-D_USE_MATH_DEFINES')
+  # Output more verbose information when something goes wrong
+  write_to_bazelrc('build --verbose_failures')
+  # The host and target platforms are the same in Windows build. So we don't
+  # have to distinct them. This avoids building the same targets twice.
+  write_to_bazelrc('build --distinct_host_configuration=false')
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
+
   if is_reduced_optimize_huge_functions_available(environ_cp):
     write_to_bazelrc(
         'build --copt=/d2ReducedOptimizeHugeFunctions --host_copt=/d2ReducedOptimizeHugeFunctions'

@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 load("//tensorflow/core/platform:rules_cc.bzl", "cc_library")
 load("//tensorflow:tensorflow.bzl", "if_not_windows", "tf_cc_test")
+=======
+load("//tensorflow:tensorflow.bzl", "if_not_windows", "tf_cc_test", "tf_cuda_library")
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
 
 package(
     default_visibility = ["//tensorflow:internal"],

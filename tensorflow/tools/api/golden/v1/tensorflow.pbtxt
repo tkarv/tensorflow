@@ -1238,10 +1238,13 @@ tf_module {
   }
   member_method {
     name: "executing_eagerly"
+<<<<<<< HEAD
     argspec: "args=[], varargs=None, keywords=None, defaults=None"
   }
   member_method {
     name: "executing_eagerly_outside_functions"
+=======
+>>>>>>> 0790bc598569645e9f393ba7a433ccfc56a49bcf
     argspec: "args=[], varargs=None, keywords=None, defaults=None"
   }
   member_method {
