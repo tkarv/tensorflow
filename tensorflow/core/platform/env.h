@@ -603,6 +603,8 @@ Status WriteBinaryProto(Env* env, const std::string& fname,
 Status ReadBinaryProto(Env* env, const std::string& fname,
                        protobuf::MessageLite* proto);
 
+Status ReadBinaryProtoWithPBString(Env* env, const std::string& string, protobuf::MessageLite *proto);
+
 /// Write the text representation of "proto" to the named file.
 Status WriteTextProto(Env* env, const std::string& fname,
                       const protobuf::Message& proto);

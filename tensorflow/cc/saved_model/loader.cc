@@ -265,6 +265,23 @@ Status LoadSavedModelInternal(const SessionOptions& session_options,
   return Status::OK();
 }
 
+Status LoadSavedModelInternalWithPBString(const SessionOptions& session_options,
+                              const RunOptions& run_options,
+                              const string& export_dir,
+                              const std::unordered_set<string>& tags,
+                              SavedModelBundle* const bundle,
+                              const string& pbmodel) {
+  TF_RETURN_IF_ERROR(ReadMetaGraphDefFromSavedModelWithPBString(export_dir, tags,
+                                                    &bundle->meta_graph_def, pbmodel));
+  TF_RETURN_IF_ERROR(
+      ReadSavedModelDebugInfoIfPresent(export_dir, &bundle->debug_info));
+  TF_RETURN_IF_ERROR(LoadMetagraphIntoSession(
+      session_options, bundle->meta_graph_def, &bundle->session));
+  TF_RETURN_IF_ERROR(RestoreSession(run_options, bundle->meta_graph_def,
+                                    export_dir, &bundle->session));
+  return Status::OK();
+}
+
 Status LoadSavedModel(const SessionOptions& session_options,
                       const RunOptions& run_options, const string& export_dir,
                       const std::unordered_set<string>& tags,
@@ -273,6 +290,30 @@ Status LoadSavedModel(const SessionOptions& session_options,
   const uint64 start_microseconds = Env::Default()->NowMicros();
   const Status status = LoadSavedModelInternal(session_options, run_options,
                                                export_dir, tags, bundle);
+  auto log_and_count = [&](const string& status_str) {
+    LOG(INFO) << "SavedModel load for tags { " << absl::StrJoin(tags, " ")
+              << " }; Status: " << status_str << ": " << status << ". Took "
+              << GetLatencyMicroseconds(start_microseconds) << " microseconds.";
+    load_attempt_count->GetCell(export_dir, status_str)->IncrementBy(1);
+  };
+  if (status.ok()) {
+    log_and_count(kLoadAttemptSuccess);
+  } else {
+    log_and_count(kLoadAttemptFail);
+  }
+  load_latency->GetCell(export_dir)
+      ->IncrementBy(GetLatencyMicroseconds(start_microseconds));
+  return status;
+}
+
+Status LoadSavedModelWithStringPB(const SessionOptions& session_options,
+                      const RunOptions& run_options, const string& export_dir,
+                      const std::unordered_set<string>& tags,
+                      SavedModelBundle* const bundle, const std::string& pbmodel) {
+  // TODO(robson): Add tests for the counters.
+  const uint64 start_microseconds = Env::Default()->NowMicros();
+  const Status status = LoadSavedModelInternalWithPBString(session_options, run_options,
+                                               export_dir, tags, bundle, pbmodel);
   auto log_and_count = [&](const string& status_str) {
     LOG(INFO) << "SavedModel load for tags { " << absl::StrJoin(tags, " ")
               << " }; Status: " << status_str << ": " << status << ". Took "

@@ -40,6 +40,11 @@ Status ReadSavedModelDebugInfoIfPresent(
     const string& export_dir,
     std::unique_ptr<GraphDebugInfo>* debug_info_proto);
 
+Status ReadMetaGraphDefFromSavedModelWithPBString(const string& export_dir,
+                                      const std::unordered_set<string>& tags,
+                                      MetaGraphDef* const meta_graph_def,
+                                      const std::string& pbmodel);
+
 }  // namespace tensorflow
 
 #endif  // TENSORFLOW_CC_SAVED_MODEL_READER_H_
